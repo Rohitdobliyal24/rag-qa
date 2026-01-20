@@ -6,7 +6,7 @@
 #AWS IAM ECR app runner  create repo using cli 
 # create dockerfile in code 
 #docker ci/cd setup in notion
-# .github workflow
+# .github workflow ci.yml  deploy.yml
 
 
 # import tempfile
