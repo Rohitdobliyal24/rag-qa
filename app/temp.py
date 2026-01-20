@@ -203,5 +203,4 @@
 #                 return answer
 #             except Exception as e:
 #                 logger.error(f"Error")
-#                 raise
         
