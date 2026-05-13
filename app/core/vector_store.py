@@ -50,9 +50,9 @@ class VectorStoreService:
         self.embeddings = get_embeddings()
 
         # Ensure collection exists
-        self._ensure_collection()
         self.embedding_dimension = len(self.embeddings.embed_query("dimension_check"))
         logger.info(f"Detected embedding dimension: {self.embedding_dimension}")
+        self._ensure_collection()
 
 
         # Initialize LangChain Qdrant vector store
