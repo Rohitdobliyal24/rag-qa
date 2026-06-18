@@ -1,6 +1,7 @@
 """RAGAS evaluation module for RAG quality assessment."""
 
 import asyncio
+import math
 import time
 from typing import Any
 
@@ -91,12 +92,9 @@ class RAGASEvaluator:
 
             evaluation_time_ms = (time.time() - start_time) * 1000
 
-            # Extract scores
             scores = {
-                "faithfulness": float(result["faithfulness"]) if "faithfulness" in result else None,
-                "answer_relevancy": (
-                    float(result["answer_relevancy"]) if "answer_relevancy" in result else None
-                ),
+                "faithfulness": self._extract_score(result, "faithfulness"),
+                "answer_relevancy": self._extract_score(result, "answer_relevancy"),
                 "evaluation_time_ms": round(evaluation_time_ms, 2),
                 "error": None,
             }
@@ -114,6 +112,26 @@ class RAGASEvaluator:
         except Exception as e:
             logger.warning(f"Evaluation failed: {e}", exc_info=True)
             return self._handle_evaluation_error(e)
+
+    @staticmethod
+    def _extract_score(result: dict[str, Any], metric: str) -> float | None:
+        """Extract a metric score, normalizing missing or NaN values to None.
+
+        Args:
+            result: RAGAS result record
+            metric: Metric key to extract
+
+        Returns:
+            The score as a float, or None if absent or NaN
+        """
+        if metric not in result:
+            return None
+
+        value = float(result[metric])
+        if math.isnan(value):
+            return None
+
+        return value
 
     def _prepare_dataset(
         self,
